@@ -24,7 +24,7 @@ namespace MapAssist.Structs
     [StructLayout(LayoutKind.Explicit)]
     unsafe public struct Room
     {
-        [FieldOffset(0)] public Room** pRoomsNear;
+        [FieldOffset(0x00)] public Room** pRoomsNear;
         [FieldOffset(0x18)] public RoomEx* pRoomEx;
         [FieldOffset(0x40)] public uint numRoomsNear;
         [FieldOffset(0x48)] public Act* pAct;

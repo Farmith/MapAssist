@@ -54,9 +54,8 @@ namespace MapAssist.Helpers
                 if (Equals(PlayerUnit, default(UnitAny)))
                 {
                     var unitHashTable = Read<UnitHashTable>(processHandle, IntPtr.Add(processAddress, Offsets.UnitHashTable));
-                    for (var i = 0; i < unitHashTable.UnitTable.Length; i++)
+                    foreach(var pUnitAny in unitHashTable.UnitTable)
                     {
-                        var pUnitAny = unitHashTable.UnitTable[i];
                         if (pUnitAny == IntPtr.Zero)
                         {
                             continue;
@@ -88,7 +87,7 @@ namespace MapAssist.Helpers
                 }
 
                 var actId = act.ActId;
-                var actMisc = Read<ActMisc>(processHandle, (IntPtr)act.Unk1);
+                var actMisc = Read<ActMisc>(processHandle, (IntPtr)act.ActMisc);
                 var gameDifficulty = actMisc.GameDifficulty;
                 var path = Read<Path>(processHandle, (IntPtr)PlayerUnit.pPath);
                 var positionX = path.DynamicX;

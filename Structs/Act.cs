@@ -26,6 +26,6 @@ namespace MapAssist.Structs
     {
         [FieldOffset(0x14)] public uint MapSeed;
         [FieldOffset(0x20)] public uint ActId;
-        [FieldOffset(0x70)] public ActMisc* Unk1;
+        [FieldOffset(0x70)] public ActMisc* ActMisc;
     }
 }

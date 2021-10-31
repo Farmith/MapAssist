@@ -25,10 +25,10 @@ namespace MapAssist.Structs
     [StructLayout(LayoutKind.Explicit)]
     unsafe public struct UnitAny
     {
-        [FieldOffset(0x0)] public uint UnitType;
-        [FieldOffset(0x4)] public uint TxtFileNo;
-        [FieldOffset(0x8)] public uint UnitId;
-        [FieldOffset(0xC)] public uint Mode;
+        [FieldOffset(0x00)] public uint UnitType;
+        [FieldOffset(0x04)] public uint TxtFileNo;
+        [FieldOffset(0x08)] public uint UnitId;
+        [FieldOffset(0x0C)] public uint Mode;
         [FieldOffset(0x10)] public IntPtr UnitData;
         [FieldOffset(0x10)] public IntPtr IsPlayer;
         [FieldOffset(0x20)] public Act* pAct;
