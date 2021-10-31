@@ -48,7 +48,15 @@ namespace MapAssist.Helpers
             {
                 Process[] process = Process.GetProcessesByName(ProcessName);
                 Process gameProcess = process.Length > 0 ? process[0] : null;
-
+                
+                // Check which GameClient is in focus, and use that for the Overlay
+                foreach (Process p in process)
+                {
+                    if (WindowsExternal.GetForegroundWindow() == p.MainWindowHandle)
+                    {
+                        gameProcess = p;
+                    }
+                }
                 if (gameProcess == null)
                 {
                     throw new Exception("Game process not found.");
