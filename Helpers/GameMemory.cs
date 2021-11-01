@@ -56,11 +56,6 @@ namespace MapAssist.Helpers
                     var unitHashTable = Read<UnitHashTable>(processHandle, IntPtr.Add(processAddress, Offsets.UnitHashTable));
                     foreach(var pUnitAny in unitHashTable.UnitTable)
                     {
-                        if (pUnitAny == IntPtr.Zero)
-                        {
-                            continue;
-                        }
-
                         var pListNext = pUnitAny;
 
                         while(pListNext != IntPtr.Zero)
