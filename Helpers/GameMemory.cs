@@ -48,11 +48,12 @@ namespace MapAssist.Helpers
             {
                 Process[] process = Process.GetProcessesByName(ProcessName);
                 Process gameProcess = process.Length > 0 ? process[0] : null;
-                
+
                 // Check which GameClient is in focus, and use that for the Overlay
+                var windowInFocus = WindowsExternal.GetForegroundWindow();
                 foreach (Process p in process)
                 {
-                    if (WindowsExternal.GetForegroundWindow() == p.MainWindowHandle)
+                    if (windowInFocus == p.MainWindowHandle)
                     {
                         gameProcess = p;
                     }
@@ -169,7 +170,8 @@ namespace MapAssist.Helpers
                     Area = (Area)levelId,
                     Difficulty = (Difficulty)gameDifficulty,
                     MapShown = mapShown,
-                    MainWindowHandle = gameProcess.MainWindowHandle
+                    MainWindowHandle = gameProcess.MainWindowHandle,
+                    PlayerName = playerName
                 };
             }
             catch (Exception)

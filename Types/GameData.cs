@@ -30,12 +30,14 @@ namespace MapAssist.Types
         public Area Area;
         public bool MapShown;
         public IntPtr MainWindowHandle;
+        public string PlayerName;
 
         public bool HasGameChanged(GameData other)
         {
             if (other == null) return true;
             if (MapSeed != other.MapSeed) return true;
             if (Difficulty != other.Difficulty) return true;
+            if (PlayerName != other.PlayerName) return true;
             return false;
         }
 
