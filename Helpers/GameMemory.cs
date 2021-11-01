@@ -102,7 +102,7 @@ namespace MapAssist.Helpers
                 var actMisc = Read<ActMisc>(processHandle, (IntPtr)act.ActMisc);
                 var gameDifficulty = actMisc.GameDifficulty;
 
-                if (gameDifficulty < 0 || gameDifficulty > 2)
+                if (!gameDifficulty.IsValid())
                 {
                     throw new Exception("Game difficulty out of bounds.");
                 }
@@ -115,7 +115,7 @@ namespace MapAssist.Helpers
                 var level = Read<Level>(processHandle, (IntPtr)roomEx.pLevel);
                 var levelId = level.LevelId;
 
-                if ((uint)levelId < 1 || (uint)levelId > 136)
+                if (!levelId.IsValid())
                 {
                     throw new Exception("Level id out of bounds.");
                 }
@@ -127,7 +127,7 @@ namespace MapAssist.Helpers
                     PlayerPosition = new Point(positionX, positionY),
                     MapSeed = mapSeed,
                     Area = levelId,
-                    Difficulty = (Difficulty)gameDifficulty,
+                    Difficulty = gameDifficulty,
                     MapShown = mapShown,
                     MainWindowHandle = gameProcess.MainWindowHandle
                 };

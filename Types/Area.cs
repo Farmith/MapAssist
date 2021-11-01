@@ -314,5 +314,10 @@ namespace MapAssist.Types
         {
             return _areaNames.TryGetValue((int)area, out var areaName) ? areaName : area.ToString();
         }
+
+        public static bool IsValid(this Area area)
+        {
+            return (uint)area >= 1 && (uint)area <= 136;
+        }
     }
 }
