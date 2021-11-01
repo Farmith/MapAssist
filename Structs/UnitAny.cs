@@ -38,7 +38,8 @@ namespace MapAssist.Structs
         [FieldOffset(0xB8)] public uint OwnerType; // ?
         [FieldOffset(0xC4)] public ushort X;
         [FieldOffset(0xC6)] public ushort Y;
-        [FieldOffset(0x158)] public UnitAny* pUnitNext;
+        [FieldOffset(0x150)] public UnitAny* pListNext;
+        [FieldOffset(0x158)] public UnitAny* pRoomNext;
 
         public override bool Equals(object obj) => obj is UnitAny other && Equals(other);
 

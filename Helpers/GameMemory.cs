@@ -60,29 +60,27 @@ namespace MapAssist.Helpers
                         {
                             continue;
                         }
-                        var unitAny = Read<UnitAny>(processHandle, pUnitAny);
-                        while(true)
+
+                        var pListNext = pUnitAny;
+
+                        while(pListNext != IntPtr.Zero)
                         {
-                            if (unitAny.OwnerType == 256) // or 256 ??
+                            var unitAny = Read<UnitAny>(processHandle, pListNext);
+                            if (unitAny.OwnerType == 256) // 0x100
                             {
                                 PlayerUnitPtr = pUnitAny;
                                 PlayerUnit = unitAny;
-                                goto endNext;
-                            }
-                            if ((IntPtr)unitAny.pUnitNext != IntPtr.Zero)
-                            {
-                                unitAny = Read<UnitAny>(processHandle, (IntPtr)unitAny.pUnitNext);
-                            }
-                            else
-                            {
                                 break;
                             }
+                            pListNext = (IntPtr)unitAny.pListNext;
+                        }
+
+                        if (PlayerUnitPtr != IntPtr.Zero)
+                        {
+                            break;
                         }
                     }
-                    throw new Exception("Player pointer not found.");
                 }
-
-                endNext:;
 
                 if (PlayerUnitPtr == IntPtr.Zero)
                 {
