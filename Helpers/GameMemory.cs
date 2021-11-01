@@ -54,11 +54,11 @@ namespace MapAssist.Helpers
                 if (Equals(PlayerUnit, default(UnitAny)))
                 {
                     var unitHashTable = Read<UnitHashTable>(processHandle, IntPtr.Add(processAddress, Offsets.UnitHashTable));
-                    foreach(var pUnitAny in unitHashTable.UnitTable)
+                    foreach (var pUnitAny in unitHashTable.UnitTable)
                     {
                         var pListNext = pUnitAny;
 
-                        while(pListNext != IntPtr.Zero)
+                        while (pListNext != IntPtr.Zero)
                         {
                             var unitAny = Read<UnitAny>(processHandle, pListNext);
                             if (unitAny.OwnerType == 256) // 0x100
