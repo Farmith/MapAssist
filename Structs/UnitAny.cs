@@ -33,7 +33,8 @@ namespace MapAssist.Structs
         [FieldOffset(0x10)] public IntPtr IsPlayer;
         [FieldOffset(0x20)] public Act* pAct;
         [FieldOffset(0x38)] public Path* pPath;
-        [FieldOffset(0x90)] public IntPtr Stats;
+        [FieldOffset(0x88)] public IntPtr StatsListEx;
+        [FieldOffset(0x90)] public IntPtr Inventory;
         [FieldOffset(0xB8)] public uint OwnerType; // ?
         [FieldOffset(0xC4)] public ushort X;
         [FieldOffset(0xC6)] public ushort Y;
