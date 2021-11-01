@@ -43,12 +43,12 @@ namespace MapAssist.Structs
 
         public override bool Equals(object obj) => obj is UnitAny other && Equals(other);
 
-        public bool Equals(UnitAny p) => UnitId == p.UnitId;
+        public bool Equals(UnitAny unit) => UnitId == unit.UnitId;
 
-        public override int GetHashCode() => (X, Y).GetHashCode();
+        public override int GetHashCode() => UnitId.GetHashCode();
 
-        public static bool operator ==(UnitAny lhs, UnitAny rhs) => lhs.Equals(rhs);
+        public static bool operator ==(UnitAny unit1, UnitAny unit2) => unit1.Equals(unit2);
 
-        public static bool operator !=(UnitAny lhs, UnitAny rhs) => !(lhs == rhs);
+        public static bool operator !=(UnitAny unit1, UnitAny unit2) => !(unit1 == unit2);
     }
 }
