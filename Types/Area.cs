@@ -284,7 +284,7 @@ namespace MapAssist.Types
             { 110, "Bloody Foothills" },
             { 111, "Frigid Highlands" },
             { 112, "Arreat Plateau" },
-            { 113, "Crystalized Passage" },
+            { 113, "Crystalline Passage" },
             { 114, "Frozen River" },
             { 115, "Glacial Trail" },
             { 116, "Drifter Cavern" },
