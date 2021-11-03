@@ -18,6 +18,7 @@
  **/
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -33,7 +34,7 @@ namespace MapAssist.Helpers
         private static IntPtr PlayerUnitPtr;
         private static UnitAny PlayerUnit = default;
 
-        unsafe public static GameData GetGameData()
+        unsafe public static GameData GetGameData(bool rehash = false)
         {
             IntPtr processHandle = IntPtr.Zero;
 
@@ -42,6 +43,16 @@ namespace MapAssist.Helpers
                 Process[] process = Process.GetProcessesByName(ProcessName);
                 Process gameProcess = process.Length > 0 ? process[0] : null;
 
+                var windowInFocus = WindowsExternal.GetForegroundWindow();
+                foreach(Process p in process)
+                {
+                    if (windowInFocus == p.MainWindowHandle)
+                    {
+                        gameProcess = p;
+                    }
+                }
+
+                var unitList = new List<Players>(); // Keep a record of the units
                 if (gameProcess == null)
                 {
                     throw new Exception("Game process not found.");
@@ -51,9 +62,49 @@ namespace MapAssist.Helpers
                     WindowsExternal.OpenProcess((uint)WindowsExternal.ProcessAccessFlags.VirtualMemoryRead, false, gameProcess.Id);
                 IntPtr processAddress = gameProcess.MainModule.BaseAddress;
 
-                if (Equals(PlayerUnit, default(UnitAny)))
+                var unitHashTable = Read<UnitHashTable>(processHandle, IntPtr.Add(processAddress, Offsets.UnitHashTable));
+                /* save the unit table for reference */
+                unitList = new List<Players>();
+                foreach (var pUnitAny in unitHashTable.UnitTable)
                 {
-                    var unitHashTable = Read<UnitHashTable>(processHandle, IntPtr.Add(processAddress, Offsets.UnitHashTable));
+                    var pListNext = pUnitAny;
+                    while (pListNext != IntPtr.Zero)
+                    {
+                        var thisPlayer = new Players();
+
+                        var unitAny = Read<UnitAny>(processHandle, pListNext);
+
+                        var tp = Read<Path>(processHandle, (IntPtr)unitAny.pPath);
+                        if (tp.DynamicX == 0 || tp.DynamicY == 0)
+                        {
+                            // Not something we care about for now
+
+                        }
+                        else
+                        {
+                            var tr = Read<Room>(processHandle, (IntPtr)tp.pRoom);
+                            var trex = Read<RoomEx>(processHandle, (IntPtr)tr.pRoomEx);
+                            var tlevel = Read<Level>(processHandle, (IntPtr)trex.pLevel);
+                            var ta = Read<Act>(processHandle, (IntPtr)unitAny.pAct);
+                            var tam = Read<ActMisc>(processHandle, (IntPtr)ta.ActMisc);
+                            var tpn = Encoding.ASCII.GetString(Read<byte>(processHandle, unitAny.UnitData, 16)).TrimEnd((char)0);
+
+                            thisPlayer.PlayerPath = tp;
+                            thisPlayer.PlayerUnit = unitAny;
+                            thisPlayer.PlayerUnitPtr = pUnitAny;
+                            thisPlayer.Level = tlevel;
+                            thisPlayer.Act = ta;
+                            thisPlayer.ActMisc = tam;
+                            thisPlayer.PlayerName = tpn;
+
+                            unitList.Add(thisPlayer);
+                        }
+                        pListNext = (IntPtr)unitAny.pListNext;
+                    }
+                }
+                /* end of saving the unit table */
+//                if (Equals(PlayerUnit, default(UnitAny)) || rehash)
+//                {
                     foreach (var pUnitAny in unitHashTable.UnitTable)
                     {
                         var pListNext = pUnitAny;
@@ -75,7 +126,7 @@ namespace MapAssist.Helpers
                             break;
                         }
                     }
-                }
+//                }
 
                 if (PlayerUnitPtr == IntPtr.Zero)
                 {
@@ -129,7 +180,9 @@ namespace MapAssist.Helpers
                     Area = levelId,
                     Difficulty = gameDifficulty,
                     MapShown = mapShown,
-                    MainWindowHandle = gameProcess.MainWindowHandle
+                    MainWindowHandle = gameProcess.MainWindowHandle,
+                    PlayerName = playerName,
+                    Players = unitList
                 };
             }
             catch (Exception exception)
