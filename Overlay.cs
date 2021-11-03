@@ -44,14 +44,27 @@ namespace MapAssist
         private MapApi _mapApi;
         private bool _show = true;
         private Screen _screen;
+        private DebugWindow _dbgWin;
 
+        private void ShowDebugWindow()
+        {
+            _dbgWin = new DebugWindow();
+            _dbgWin.Show(this);
+        }
         public Overlay(IKeyboardMouseEvents keyboardMouseEvents)
         {
             InitializeComponent();
+
+            ShowDebugWindow();
+
             keyboardMouseEvents.KeyPress += (_, args) =>
             {
                 if (InGame())
                 {
+                    if (args.KeyChar == _dbgWin.DebugKey)
+                    {
+                        _dbgWin.DoSomething();
+                    }
                     if (args.KeyChar == Map.ToggleKey)
                     {
                         _show = !_show;
@@ -139,7 +152,7 @@ namespace MapAssist
             }
 
             _currentGameData = gameData;
-
+            _dbgWin.UpdateGameData(gameData);
             if (ShouldHideMap())
             {
                 mapOverlay.Hide();
